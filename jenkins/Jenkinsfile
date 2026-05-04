@@ -1,1 +1,21 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:3.9'
+        }
+    }
 
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t ramya-app .'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'kubectl apply -f k8s-deployment.yaml'
+            }
+        }
+    }
+}
