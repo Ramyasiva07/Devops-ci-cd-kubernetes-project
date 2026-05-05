@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ramya-app
+  name: portfolio
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: ramya
+      app: portfolio
   template:
     metadata:
       labels:
-        app: ramya
+        app: portfolio
     spec:
       containers:
-      - name: ramya-container
-        image: ramya-app
+      - name: portfolio
+        image: your-dockerhub-username/portfolio:latest
         ports:
         - containerPort: 5000
