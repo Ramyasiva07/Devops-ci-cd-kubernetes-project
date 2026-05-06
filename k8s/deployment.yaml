@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: portfolio
-          image: ramyasiva07/portfolio:latest
+          image: ramyasiva07/portfolio:v2
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
