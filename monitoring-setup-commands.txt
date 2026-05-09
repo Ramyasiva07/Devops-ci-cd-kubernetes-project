@@ -1,0 +1,31 @@
+# This file contains all commands used to deploy monitoring stack
+# Environment: Minikube / Kubernetes cluster
+
+# Add Helm repository
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+# Update repo
+helm repo update
+
+# Install Prometheus + Grafana stack
+helm install monitoring prometheus-community/kube-prometheus-stack
+
+# Check pods
+kubectl get pods
+
+# Check services
+kubectl get svc
+
+# Port forward Grafana
+kubectl port-forward svc/monitoring-grafana 3000:80
+
+# Get Grafana admin password
+kubectl get secret monitoring-grafana \
+  -o jsonpath="{.data.admin-password}" | base64 --decode
+
+# Access Grafana
+# http://localhost:3000
+# username: admin
+
+# Optional: uninstall
+helm uninstall monitoring
