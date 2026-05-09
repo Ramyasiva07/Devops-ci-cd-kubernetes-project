@@ -1,127 +1,221 @@
-🚀 DevOps CI/CD Kubernetes Project
+# DevOps CI/CD Kubernetes Monitoring Project
 
-📌 Project Overview
+## Project Overview
 
-This project demonstrates a complete CI/CD pipeline using:
+This project demonstrates a complete DevOps workflow including:
 
-- GitHub (Source Code)
-- Jenkins (CI/CD)
-- Docker (Containerization)
-- Kubernetes (Deployment using Minikube)
-- Ngrok (Expose Jenkins to GitHub Webhook)
+- Source Code Management using GitHub
+- CI/CD Automation using Jenkins
+- Containerization using Docker
+- Kubernetes Deployment using Minikube
+- Monitoring using Prometheus & Grafana
+- GitHub Webhook Integration using Ngrok
+
+The project automates application build, Docker image creation, deployment, and monitoring in a Kubernetes environment.
 
 ---
 
-🛠️ Tools & Technologies
+## Architecture Flow
+
+1. Developer pushes code to GitHub
+2. GitHub Webhook triggers Jenkins pipeline
+3. Jenkins builds Docker image
+4. Docker image pushed to DockerHub
+5. Kubernetes deploys updated application
+6. Prometheus collects Kubernetes metrics
+7. Grafana visualizes monitoring dashboards
+
+---
+
+## Tools & Technologies
 
 - GitHub
 - Jenkins
 - Docker
+- DockerHub
 - Kubernetes (Minikube)
+- Prometheus
+- Grafana
+- Helm
 - Ngrok
 - Python (Flask App)
 
 ---
 
-🔁 CI/CD Flow
+## Jenkins & Webhook Setup
 
-1. Developer pushes code to GitHub
-2. GitHub Webhook triggers Jenkins
-3. Jenkins pipeline:
-   - Builds Docker image
-   - Pushes image to Docker Hub
-   - Deploys to Kubernetes
-4. Kubernetes updates the application
-5. Application is accessible via service
+### Start Jenkins
 
----
+Open:
+http://localhost:8080
 
-⚙️ Jenkins Setup
-
-1. Start Jenkins
-
-- Open: http://localhost:8080
-
-2. Expose Jenkins using Ngrok
+### Expose Jenkins using Ngrok
 
 ngrok http 8080
 
-Copy URL and add to GitHub webhook:
+Add webhook in GitHub:
 
 https://<ngrok-url>/github-webhook/
 
+GitHub webhook automatically triggers Jenkins pipeline on every code push.
+
 ---
 
-🐳 Docker Commands
+## Docker Workflow
+
+### Build Docker Image
 
 docker build -t ramyasiva07/portfolio:latest .
+
+### Push Image to DockerHub
+
 docker push ramyasiva07/portfolio:latest
+
+DockerHub credentials were securely configured inside Jenkins.
 
 ---
 
-☸️ Kubernetes Commands
+## Kubernetes Deployment
 
-Start Minikube:
+### Start Minikube
 
 minikube start
 
-Apply manifests:
+### Deploy Application
 
 kubectl apply -f k8s/
 
-Restart deployment:
+### Verify Resources
+
+kubectl get pods
+
+kubectl get svc
+
+### Restart Deployment
 
 kubectl rollout restart deployment portfolio
 
-Access service:
+### Access Application
 
 minikube service portfolio-service
 
+Application is exposed using Kubernetes Service for external access.
+
 ---
 
-🔄 Restart Workflow
+## Monitoring Setup using Prometheus & Grafana
+
+### Install Monitoring Stack
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm repo update
+
+helm install monitoring prometheus-community/kube-prometheus-stack
+
+---
+
+## Access Grafana Dashboard
+
+kubectl port-forward svc/monitoring-grafana 3000:80
+
+Open:
+http://localhost:3000
+
+### Login
+
+Username:
+admin
+
+### Get Password
+
+kubectl get secret monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+
+---
+
+## Access Prometheus UI
+
+kubectl port-forward svc/monitoring-kube-prometheus-prometheus 9090:9090
+
+Open:
+http://localhost:9090
+
+Prometheus was used to:
+- Run PromQL queries
+- View raw metrics
+- Debug monitoring data
+
+---
+
+## Grafana Dashboard Metrics
+
+### Pod Metrics
+
+kube_pod_info{pod=~"portfolio.*"}
+
+### CPU Usage
+
+rate(container_cpu_usage_seconds_total{pod=~"portfolio.*"}[5m])
+
+### Memory Usage
+
+container_memory_usage_bytes{pod=~"portfolio.*"}
+
+### Pod Count
+
+count(kube_pod_info{pod=~"portfolio.*"})
+
+---
+
+## Screenshots
+
+- Jenkins Pipeline Success
+- DockerHub Image Push
+- Kubernetes Pods Running
+- Kubernetes Services
+- Grafana Dashboard
+- CPU Usage Graph
+- Memory Usage Graph
+- Pod Count Metrics
+- Final Portfolio Application
+
+---
+
+## Restart Workflow
 
 After system restart:
 
 minikube start
+
 kubectl apply -f k8s/
+
 minikube service portfolio-service
 
 Start Jenkins and Ngrok again.
 
 ---
 
-🔐 Credentials Used
+## Key Learning
 
-- Docker Hub credentials stored in Jenkins
-- Used for secure login and image push
-
----
-
-📡 Webhook Trigger
-
-GitHub webhook is used to automatically trigger Jenkins pipeline on every code push.
-
----
-
-📌 Notes
-
-- Ngrok URL changes every time → update webhook
-- Minikube runs locally → needs restart after shutdown
-- This setup is for local development/demo
+- Built automated CI/CD pipeline using Jenkins
+- Integrated GitHub Webhook automation
+- Containerized application using Docker
+- Deployed application into Kubernetes cluster
+- Implemented monitoring using Prometheus
+- Visualized metrics using Grafana dashboards
+- Managed Kubernetes deployments and services
 
 ---
 
-🌍 Future Improvements
+## Future Improvements
 
 - Deploy on AWS EKS
 - Use LoadBalancer instead of NodePort
-- Add monitoring using Prometheus & Grafana
+- Configure Ingress Controller
+- Implement centralized logging
 
 ---
 
-🎯 Conclusion
+## Conclusion
 
-This project demonstrates a real-time DevOps workflow including CI/CD automation, containerization, and Kubernetes deployment.
-
----
+This project demonstrates a complete real-time DevOps workflow including CI/CD automation, containerization, Kubernetes deployment, webhook integration, and monitoring using modern DevOps tools.
